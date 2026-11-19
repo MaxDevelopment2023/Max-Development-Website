@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="de" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Max Development – Offizielle Studio-Website</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        base: {
+                            950: '#0A0C10',
+                            900: '#10131A',
+                            850: '#151923',
+                            800: '#1C2230',
+                            700: '#272F42',
+                        },
+                        brand: {
+                            500: '#2563EB',
+                            600: '#1D4ED8',
+                            400: '#3B82F6',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #0A0C10;
+            color: #E2E8F0;
+            overflow-x: hidden;
+        }
+        /* Klare, realistische Karten ohne künstliche Neon-Glows */
+        .panel-card {
+            background-color: #10131A;
+            border: 1px solid #222938;
+            transition: border-color 0.2s ease, background-color 0.2s ease;
+        }
+        .panel-card:hover {
+            border-color: #344056;
+        }
+        /* Ruhiger Hero-Slider */
+        .hero-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            background-size: cover;
+            background-position: center;
+        }
+        .hero-slide.active {
+            opacity: 1;
+        }
+        /* Dezent angepasste Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0A0C10;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #222938;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2563EB;
+        }
+        /* Inline-Textbearbeitungsmodus für Admins */
+        body.inline-edit-active [data-editable-key] {
+            outline: 1px dashed rgba(59, 130, 246, 0.75);
+            outline-offset: 3px;
+            border-radius: 4px;
+            cursor: text;
+            transition: background-color 0.15s ease, outline-color 0.15s ease;
+        }
+        body.inline-edit-active [data-editable-key]:hover {
+            background-color: rgba(37, 99, 235, 0.12);
+            outline-color: #60A5FA;
+        }
+        body.inline-edit-active [data-editable-key]:focus {
+            outline: 2px solid #2563EB;
+            background-color: rgba(37, 99, 235, 0.18);
+        }
+    </style>
+</head>
+<body class="bg-base-950 text-slate-200 font-sans antialiased selection:bg-brand-500 selection:text-white">
+
+    <!-- ==================== 1. RECHTLICHES ZUSTIMMUNGS-OVERLAY (DSGVO / TDDDG) ==================== -->
+    <div id="legal-consent-modal" class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="w-full max-w-2xl bg-base-900 border border-base-700 rounded-xl shadow-2xl overflow-hidden my-auto">
+            <!-- Header -->
+            <div class="bg-base-850 px-6 py-4 border-b border-base-700 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-lg bg-brand-500/15 border border-brand-500/30 flex items-center justify-center text-brand-400">
+                        <i data-lucide="scale" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                        <h2 data-editable-key="legal.title" class="text-base sm:text-lg font-bold text-white">Nutzungsbedingungen & Datenschutzhinweise</h2>
+                        <p data-editable-key="legal.subtitle" class="text-xs text-slate-400">Max Development • Geltendes Recht (DSGVO / TDDDG)</p>
+                    </div>
+                </div>
+                <span id="legal-accepted-badge" class="hidden px-2.5 py-1 rounded text-xs font-medium bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                    Akzeptiert
+                </span>
+            </div>
+
+            <!-- Inhalt -->
+            <div class="p-6 space-y-4 max-h-[55vh] overflow-y-auto text-sm text-slate-300 leading-relaxed">
+                <p data-editable-key="legal.intro" class="text-slate-200">
+                    Bevor du die Website von <strong>Max Development</strong> nutzt, nimm bitte unsere verbindlichen Nutzungs- und Datenschutzbestimmungen nach deutschem Recht (DSGVO, TDDDG, UrhG) zur Kenntnis:
+                </p>
+
+                <div class="bg-base-950 border border-base-800 rounded-lg p-4 space-y-1.5">
+                    <h3 data-editable-key="legal.sec1.title" class="font-semibold text-white text-xs uppercase tracking-wider text-brand-400">1. Urheberrecht & Nutzungsbedingungen</h3>
+                    <p data-editable-key="legal.sec1.text" class="text-xs text-slate-400">
+                        Alle Texte, Screenshots, Fahrzeugmodelle und Markenbestandteile von Max Development sowie dem Projekt <em>Tram Simulator Weidenheim</em> sind urheberrechtlich geschützt (§§ 1 ff. UrhG). Eine unerlaubte Vervielfältigung oder kommerzielle Weiterverwendung ohne Zustimmung der Studioleitung ist nicht gestattet.
+                    </p>
+                </div>
+
+                <div class="bg-base-950 border border-base-800 rounded-lg p-4 space-y-1.5">
+                    <h3 data-editable-key="legal.sec2.title" class="font-semibold text-white text-xs uppercase tracking-wider text-brand-400">2. Technisch notwendige Speicherungen (§ 25 Abs. 2 TDDDG)</h3>
+                    <p data-editable-key="legal.sec2.text" class="text-xs text-slate-400">
+                        Zur Bereitstellung dieser Website nutzen wir technisch zwingend erforderliche Speichermechanismen (LocalStorage zur Speicherung deiner Zustimmung sowie Google Firebase Firestore zur Auslieferung aktueller Studio-Neuigkeiten, Fahrzeuge und Linieninformationen gemäß Art. 6 Abs. 1 lit. b & f DSGVO).
+                    </p>
+                </div>
+
+                <div class="bg-base-950 border border-base-800 rounded-lg p-4 space-y-1.5">
+                    <h3 data-editable-key="legal.sec3.title" class="font-semibold text-white text-xs uppercase tracking-wider text-brand-400">3. Spieler-Reports & Discord-Übermittlung (Art. 6 Abs. 1 lit. a DSGVO)</h3>
+                    <p data-editable-key="legal.sec3.text" class="text-xs text-slate-400">
+                        Wenn du freiwillig das Formular <em>„Spieler-Reports“</em> absendest, werden dein angegebener Roblox-/Discord-Name, deine optionale Beschreibung sowie hochgeladene Beweisdateien (Bilder/Videos bis 25 MB) zwecks Moderation über einen gesicherten Webhook an unseren Discord-Server übertragen.
+                    </p>
+                </div>
+
+                <div class="bg-base-950 border border-base-800 rounded-lg p-4 space-y-1.5">
+                    <h3 data-editable-key="legal.sec4.title" class="font-semibold text-white text-xs uppercase tracking-wider text-brand-400">4. Externe Dienste & Betroffenenrechte</h3>
+                    <p data-editable-key="legal.sec4.text" class="text-xs text-slate-400">
+                        Auf dieser Seite befinden sich Links zu externen Plattformen (Roblox, Discord), für deren Inhalte und Datenschutz die jeweiligen Betreiber verantwortlich sind. Deine Rechte auf Auskunft, Berichtigung und Löschung (Art. 15–21 DSGVO) kannst du jederzeit über unseren offiziellen Discord-Server geltend machen.
+                    </p>
+                </div>
+
+                <div id="legal-timestamp-info" class="hidden text-xs text-emerald-400 bg-emerald-950/30 border border-emerald-500/30 rounded-lg px-3.5 py-2.5"></div>
+            </div>
+
+            <!-- Footer -->
+            <div class="bg-base-850 px-6 py-4 border-t border-base-700 space-y-4">
+                <label class="flex items-start gap-3 cursor-pointer select-none">
+                    <input type="checkbox" id="legal-checkbox" class="mt-0.5 w-4 h-4 rounded border-slate-600 bg-base-950 text-brand-500 focus:ring-brand-500 focus:ring-offset-0 cursor-pointer">
+                    <span data-editable-key="legal.checkbox" class="text-xs sm:text-sm text-slate-300">
+                        Ich habe die verpflichtenden <strong>Nutzungsbedingungen und Datenschutzhinweise (DSGVO / TDDDG)</strong> gelesen und stimme diesen zu.
+                    </span>
+                </label>
+
+                <div class="flex flex-col sm:flex-row items-center justify-end gap-3">
+                    <button id="legal-close-existing-btn" onclick="closeLegalModalIfAccepted()" class="hidden w-full sm:w-auto px-4 py-2.5 rounded-lg bg-base-800 hover:bg-base-700 text-slate-200 text-sm font-medium transition-colors">
+                        Schließen
+                    </button>
+                    <button id="legal-accept-btn" onclick="acceptLegalTerms()" disabled class="w-full sm:w-auto px-5 py-2.5 rounded-lg bg-brand-500 disabled:bg-base-800 disabled:text-slate-500 disabled:cursor-not-allowed hover:bg-brand-600 text-white font-semibold text-sm transition-colors">
+                        Akzeptieren & Fortfahren
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ADMIN-LEISTE (NUR NACH LOGIN SICHTBAR) ==================== -->
+    <div id="admin-bar" class="hidden fixed top-0 inset-x-0 z-50 bg-base-850 border-b border-brand-500/40 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-11 py-1.5 flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>Eingeloggt als <strong id="admin-display-badge" class="text-brand-400 font-semibold">Admin</strong></span>
+            </div>
+            <div class="flex flex-wrap items-center gap-1.5 sm:gap-2">
+                <button id="toggle-inline-edit-btn" onclick="toggleInlineEditMode()" class="px-2.5 py-1 rounded bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold transition-colors flex items-center gap-1.5">
+                    <i data-lucide="type" class="w-3.5 h-3.5"></i>
+                    <span id="toggle-inline-edit-label">Alle Texte bearbeiten: AUS</span>
+                </button>
+                <button id="save-inline-texts-btn" onclick="saveAllInlineTexts()" class="hidden px-2.5 py-1 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition-colors flex items-center gap-1">
+                    <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                    <span>Alle Texte speichern</span>
+                </button>
+                <button onclick="openResetTextsConfirmModal()" class="px-2.5 py-1 rounded bg-base-800 hover:bg-base-700 border border-base-700 text-amber-300 text-xs font-medium transition-colors">
+                    Texte zurücksetzen
+                </button>
+                <button onclick="openBgManagerModal()" class="px-2.5 py-1 rounded bg-base-800 hover:bg-base-700 border border-base-700 text-slate-200 text-xs font-medium transition-colors">
+                    Hintergrundbilder
+                </button>
+                <button onclick="openWebhookSettingsModal()" class="px-2.5 py-1 rounded bg-base-800 hover:bg-base-700 border border-base-700 text-slate-200 text-xs font-medium transition-colors">
+                    Webhook
+                </button>
+                <button onclick="logoutAdmin()" class="px-2.5 py-1 rounded bg-rose-600/80 hover:bg-rose-600 text-white text-xs font-semibold transition-colors">
+                    Abmelden
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== 2. NAVIGATION ==================== -->
+    <header id="main-header" class="fixed top-0 inset-x-0 z-40 bg-base-950/90 backdrop-blur-md border-b border-base-800 transition-all duration-150">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 sm:h-18">
+                <!-- Logo / Name -->
+                <a href="#start" class="flex items-center gap-3">
+                    <div data-editable-key="nav.logoLetter" class="w-9 h-9 rounded-lg bg-brand-500 flex items-center justify-center text-white font-extrabold text-lg">
+                        M
+                    </div>
+                    <div class="flex flex-col">
+                        <span data-editable-key="nav.studioName" class="font-bold tracking-tight text-base sm:text-lg text-white leading-none">Max Development</span>
+                        <span data-editable-key="nav.studioSub" class="text-[11px] font-mono text-slate-400 mt-0.5">Roblox Game Studio</span>
+                    </div>
+                </a>
+
+                <!-- Desktop Links -->
+                <nav class="hidden lg:flex items-center gap-6 text-sm font-medium text-slate-300">
+                    <a href="#ueber-uns" data-editable-key="nav.link.about" class="hover:text-white transition-colors">Über uns</a>
+                    <a href="#tram-simulator" data-editable-key="nav.link.tram" class="hover:text-white transition-colors">Tram Simulator Weidenheim</a>
+                    <a href="#team" data-editable-key="nav.link.team" class="hover:text-white transition-colors">Team</a>
+                    <a href="#neuigkeiten" data-editable-key="nav.link.news" class="hover:text-white transition-colors">Neuigkeiten</a>
+                    <a href="#spieler-reports" data-editable-key="nav.link.reports" class="hover:text-white transition-colors">Spieler-Reports</a>
+                    <a href="#kontakt" data-editable-key="nav.link.contact" class="hover:text-white transition-colors">Kontakt</a>
+                </nav>
+
+                <!-- Mobile Menü Button -->
+                <button onclick="toggleMobileMenu()" aria-label="Menü öffnen" class="lg:hidden p-2 rounded-lg bg-base-900 border border-base-800 text-slate-300 hover:text-white">
+                    <i data-lucide="menu" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-base-900 border-b border-base-800 px-4 pt-2 pb-5 space-y-1">
+            <a href="#ueber-uns" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-base-800 hover:text-white">Über uns</a>
+            <a href="#tram-simulator" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-base-800 hover:text-white">Tram Simulator Weidenheim</a>
+            <a href="#team" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-base-800 hover:text-white">Team</a>
+            <a href="#neuigkeiten" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-base-800 hover:text-white">Neuigkeiten</a>
+            <a href="#spieler-reports" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-base-800 hover:text-white">Spieler-Reports</a>
+            <a href="#kontakt" onclick="toggleMobileMenu()" class="block px-3 py-2 rounded-lg text-sm text-slate-300 hover:bg-base-800 hover:text-white">Kontakt</a>
+        </div>
+    </header>
+
+    <!-- ==================== STARTSEITE (HERO – OHNE UNTEREN SCROLL-TEXT) ==================== -->
+    <section id="start" class="relative min-h-[88vh] flex items-center pt-16 overflow-hidden border-b border-base-800">
+        <!-- Hintergrund-Slider -->
+        <div id="hero-slider-container" class="absolute inset-0 z-0"></div>
+
+        <!-- Ruhige, dunkle Abdunklung für klare Lesbarkeit -->
+        <div class="absolute inset-0 z-10 bg-base-950/75"></div>
+        <div class="absolute inset-0 z-10 bg-gradient-to-r from-base-950/95 via-base-950/70 to-transparent"></div>
+
+        <!-- Hero Content -->
+        <div class="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full py-20">
+            <div class="max-w-2xl">
+                <div data-editable-key="hero.badge" class="inline-block px-3 py-1 rounded bg-base-900/90 border border-base-700 text-xs font-mono text-brand-400 mb-5">
+                    EST. 2023 • ROBLOX ENTWICKLERSTUDIO
+                </div>
+
+                <h1 data-editable-key="hero.title" class="text-4xl sm:text-6xl font-extrabold tracking-tight text-white mb-4">
+                    Max Development
+                </h1>
+
+                <p data-editable-key="hero.motto" class="text-lg sm:text-2xl font-medium text-slate-200 mb-8">
+                    Wir sind füreinander da: Max Development
+                </p>
+
+                <!-- Zwei saubere Haupt-Buttons -->
+                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
+                    <a href="#tram-simulator" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm sm:text-base transition-colors">
+                        <i data-lucide="train-front" class="w-4 h-4"></i>
+                        <span data-editable-key="hero.btn.primary">Tram Simulator Weidenheim</span>
+                    </a>
+                    <a href="https://discord.gg/numDP5Dc9x" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg bg-base-900/90 hover:bg-base-800 text-white font-semibold text-sm sm:text-base border border-base-700 transition-colors">
+                        <i data-lucide="message-square" class="w-4 h-4 text-brand-400"></i>
+                        <span data-editable-key="hero.btn.secondary">Discord beitreten</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dezente Slider-Steuerung unten rechts (nur Pfeile & Punkte, kein Text/Scroll-Hinweis) -->
+        <div class="absolute bottom-6 right-6 z-20 flex items-center gap-2 bg-base-900/80 border border-base-800 px-3 py-1.5 rounded-lg backdrop-blur-sm">
+            <button onclick="prevHeroSlide()" aria-label="Vorheriges Bild" class="p-1 text-slate-400 hover:text-white transition-colors">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            </button>
+            <div id="hero-slider-dots" class="flex items-center gap-1.5"></div>
+            <button onclick="nextHeroSlide()" aria-label="Nächstes Bild" class="p-1 text-slate-400 hover:text-white transition-colors">
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </section>
+
+    <!-- ==================== 3. ÜBER UNS ==================== -->
+    <section id="ueber-uns" class="py-20 sm:py-24 border-b border-base-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+                <div>
+                    <span data-editable-key="about.kicker" class="text-xs font-mono uppercase tracking-wider text-brand-400">Studio</span>
+                    <h2 data-editable-key="about.heading" class="text-2xl sm:text-4xl font-bold text-white mt-1">Über uns</h2>
+                </div>
+                <button onclick="openEditAboutModal()" class="admin-only hidden inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-white text-xs sm:text-sm font-semibold">
+                    <i data-lucide="pencil" class="w-4 h-4"></i>
+                    <span>Text bearbeiten</span>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- Authentischer Studio-Text -->
+                <div class="lg:col-span-7 panel-card rounded-xl p-6 sm:p-8">
+                    <p id="about-text" data-editable-key="about.mainText" class="text-slate-200 text-base sm:text-lg leading-relaxed whitespace-pre-line">Max Development wurde 2023 mit dem Ziel gegründet, detailverliebte und realistische Roblox-Erlebnisse zu erschaffen. Was als kleines Team begann, entwickelt heute verschiedene Spiele auf Roblox – allen voran unser Hauptprojekt, den Tram Simulator Weidenheim. Bei uns steht der Zusammenhalt an erster Stelle: Ganz nach unserem Leitspruch 'Wir sind füreinander da' arbeiten wir gemeinsam an neuen Strecken, Fahrzeugen und Systemen für unsere Community.</p>
+                </div>
+
+                <!-- Kompakte Fakten-Kacheln -->
+                <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="panel-card rounded-xl p-5">
+                        <span data-editable-key="about.fact1.label" class="text-xs font-mono text-slate-400">Gründung</span>
+                        <div data-editable-key="about.fact1.value" class="text-xl font-bold text-white mt-1">2023</div>
+                        <p data-editable-key="about.fact1.sub" class="text-xs text-slate-400 mt-1">Start von Max Development</p>
+                    </div>
+
+                    <div class="panel-card rounded-xl p-5">
+                        <span data-editable-key="about.fact2.label" class="text-xs font-mono text-slate-400">Plattform</span>
+                        <div data-editable-key="about.fact2.value" class="text-xl font-bold text-white mt-1">Roblox</div>
+                        <p data-editable-key="about.fact2.sub" class="text-xs text-slate-400 mt-1">Mehrere eigene Spiele</p>
+                    </div>
+
+                    <div class="panel-card rounded-xl p-5 sm:col-span-2">
+                        <span data-editable-key="about.fact3.label" class="text-xs font-mono text-slate-400">Hauptprojekt</span>
+                        <div data-editable-key="about.fact3.value" class="text-xl font-bold text-white mt-1">Tram Simulator Weidenheim</div>
+                        <p data-editable-key="about.fact3.sub" class="text-xs text-slate-400 mt-1">Realistischer Stadtbahn-Simulator mit eigenem Fuhrpark & Liniennetz</p>
+                    </div>
+
+                    <a href="https://discord.gg/numDP5Dc9x" target="_blank" rel="noopener noreferrer" class="panel-card rounded-xl p-4 flex items-center justify-between hover:border-brand-500/50 group">
+                        <div>
+                            <div data-editable-key="about.card.discord.title" class="text-sm font-semibold text-white">Discord-Server</div>
+                            <div data-editable-key="about.card.discord.sub" class="text-xs text-slate-400">Community & Support</div>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400 group-hover:text-brand-400"></i>
+                    </a>
+
+                    <a href="https://www.roblox.com/de/communities/14664464/Max-Development#!/about" target="_blank" rel="noopener noreferrer" class="panel-card rounded-xl p-4 flex items-center justify-between hover:border-brand-500/50 group">
+                        <div>
+                            <div data-editable-key="about.card.roblox.title" class="text-sm font-semibold text-white">Roblox-Gruppe</div>
+                            <div data-editable-key="about.card.roblox.sub" class="text-xs text-slate-400">Offizielle Community</div>
+                        </div>
+                        <i data-lucide="arrow-up-right" class="w-4 h-4 text-slate-400 group-hover:text-brand-400"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 4. TRAM SIMULATOR WEIDENHEIM (4 TABS) ==================== -->
+    <section id="tram-simulator" class="py-20 sm:py-24 bg-base-900 border-b border-base-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-10">
+                <span data-editable-key="tram.kicker" class="text-xs font-mono uppercase tracking-wider text-brand-400">Hauptprojekt</span>
+                <h2 data-editable-key="tram.heading" class="text-2xl sm:text-4xl font-bold text-white mt-1">Tram Simulator Weidenheim</h2>
+            </div>
+
+            <!-- 4 Unterkategorien / Tabs -->
+            <div class="flex flex-wrap gap-2 mb-8 border-b border-base-800 pb-4">
+                <button onclick="switchTramTab('infos')" id="tab-btn-infos" class="tram-tab-btn px-4 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 bg-brand-500 text-white">
+                    <i data-lucide="info" class="w-4 h-4"></i>
+                    <span data-editable-key="tram.tab.infos">Infos</span>
+                </button>
+                <button onclick="switchTramTab('fahrzeuge')" id="tab-btn-fahrzeuge" class="tram-tab-btn px-4 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 bg-base-850 text-slate-300 hover:bg-base-800 border border-base-700">
+                    <i data-lucide="train-front" class="w-4 h-4"></i>
+                    <span data-editable-key="tram.tab.vehicles">Fahrzeuge</span>
+                </button>
+                <button onclick="switchTramTab('linien')" id="tab-btn-linien" class="tram-tab-btn px-4 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 bg-base-850 text-slate-300 hover:bg-base-800 border border-base-700">
+                    <i data-lucide="map" class="w-4 h-4"></i>
+                    <span data-editable-key="tram.tab.lines">Linien & Karte</span>
+                </button>
+                <button onclick="switchTramTab('neuigkeiten')" id="tab-btn-neuigkeiten" class="tram-tab-btn px-4 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 bg-base-850 text-slate-300 hover:bg-base-800 border border-base-700">
+                    <i data-lucide="newspaper" class="w-4 h-4"></i>
+                    <span data-editable-key="tram.tab.news">Neuigkeiten</span>
+                </button>
+            </div>
+
+            <!-- TAB 1: INFOS -->
+            <div id="tram-panel-infos" class="tram-panel">
+                <div class="panel-card rounded-xl p-6 sm:p-8">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-base-800 mb-6">
+                        <div>
+                            <span data-editable-key="tram.info.badge" class="text-xs font-mono text-emerald-400">In Entwicklung • Roblox</span>
+                            <h3 id="tram-info-title" data-editable-key="tram.info.title" class="text-xl sm:text-2xl font-bold text-white mt-1">Stadtbahn-Simulation in Weidenheim</h3>
+                        </div>
+                        <button onclick="openEditTramInfoModal()" class="admin-only hidden inline-flex items-center gap-2 px-3.5 py-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold self-start">
+                            <i data-lucide="pencil" class="w-4 h-4"></i>
+                            <span>Infos bearbeiten</span>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                        <div class="lg:col-span-7 space-y-5">
+                            <p id="tram-info-desc" data-editable-key="tram.info.desc" class="text-slate-300 leading-relaxed text-sm sm:text-base">
+                                Im Tram Simulator Weidenheim übernimmst du den Fahrdienst auf verschiedenen Stadtbahnlinien durch Weidenheim. Dich erwarten realistische Fahrphysik, ein interaktives Fahrgastsystem, originalgetreu gestaltete Haltestellen wie die Peiner Straße oder Messe/Nord sowie detailreiche Bahnen vom Typ TW 6000 und TW 2000.
+                            </p>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+                                <div class="p-3 rounded-lg bg-base-950 border border-base-800 flex items-center gap-2.5">
+                                    <i data-lucide="check" class="w-4 h-4 text-brand-400 shrink-0"></i>
+                                    <span data-editable-key="tram.feature1">Realistische Fahrphysik & Steuerung</span>
+                                </div>
+                                <div class="p-3 rounded-lg bg-base-950 border border-base-800 flex items-center gap-2.5">
+                                    <i data-lucide="check" class="w-4 h-4 text-brand-400 shrink-0"></i>
+                                    <span data-editable-key="tram.feature2">Interaktives Fahrgast- & Ansagesystem</span>
+                                </div>
+                                <div class="p-3 rounded-lg bg-base-950 border border-base-800 flex items-center gap-2.5">
+                                    <i data-lucide="check" class="w-4 h-4 text-brand-400 shrink-0"></i>
+                                    <span data-editable-key="tram.feature3">Originalgetreue Haltestellen & Signale</span>
+                                </div>
+                                <div class="p-3 rounded-lg bg-base-950 border border-base-800 flex items-center gap-2.5">
+                                    <i data-lucide="check" class="w-4 h-4 text-brand-400 shrink-0"></i>
+                                    <span data-editable-key="tram.feature4">Mehrere Baureihen & Sonderlackierungen</span>
+                                </div>
+                            </div>
+
+                            <div class="pt-2">
+                                <a id="tram-roblox-link" href="https://www.roblox.com/de/communities/14664464/Max-Development#!/about" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-5 py-3 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors">
+                                    <i data-lucide="external-link" class="w-4 h-4"></i>
+                                    <span data-editable-key="tram.robloxBtn">Zur Roblox-Gruppe & Spiel</span>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-5">
+                            <div class="rounded-xl overflow-hidden border border-base-800 bg-base-950">
+                                <img id="tram-info-preview-img" src="" alt="Tram Simulator Weidenheim" class="w-full h-60 sm:h-68 object-cover">
+                                <div data-editable-key="tram.imgCaption" class="px-4 py-3 border-t border-base-800 text-xs text-slate-400">
+                                    TW 6000 (6241a) – Max Development Sonderlackierung
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: FAHRZEUGE -->
+            <div id="tram-panel-fahrzeuge" class="tram-panel hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 data-editable-key="tram.vehicles.heading" class="text-lg sm:text-xl font-bold text-white">Fahrzeuge & Fuhrpark</h3>
+                    <button onclick="openVehicleModal()" class="admin-only hidden inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-white text-xs sm:text-sm font-semibold">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Fahrzeug hinzufügen</span>
+                    </button>
+                </div>
+                <div id="vehicles-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+            </div>
+
+            <!-- TAB 3: LINIEN & KARTE -->
+            <div id="tram-panel-linien" class="tram-panel hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 data-editable-key="tram.lines.heading" class="text-lg sm:text-xl font-bold text-white">Liniennetz & Haltestellen</h3>
+                    <button onclick="openLineModal()" class="admin-only hidden inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-white text-xs sm:text-sm font-semibold">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Linie hinzufügen</span>
+                    </button>
+                </div>
+                <div id="lines-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            </div>
+
+            <!-- TAB 4: NEUIGKEITEN (SPIELSPEZIFISCH) -->
+            <div id="tram-panel-neuigkeiten" class="tram-panel hidden">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 data-editable-key="tram.news.heading" class="text-lg sm:text-xl font-bold text-white">Updates & Changelogs (Weidenheim)</h3>
+                    <button onclick="openNewsModal('tram')" class="admin-only hidden inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-white text-xs sm:text-sm font-semibold">
+                        <i data-lucide="plus" class="w-4 h-4"></i>
+                        <span>Update posten</span>
+                    </button>
+                </div>
+                <div id="tram-news-list" class="space-y-4"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 5. TEAM ==================== -->
+    <section id="team" class="py-20 sm:py-24 border-b border-base-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+                <div>
+                    <span data-editable-key="team.kicker" class="text-xs font-mono uppercase tracking-wider text-brand-400">Studioleitung & Entwickler</span>
+                    <h2 data-editable-key="team.heading" class="text-2xl sm:text-4xl font-bold text-white mt-1">Unser Team</h2>
+                </div>
+                <button onclick="openTeamModal()" class="admin-only hidden inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-white text-xs sm:text-sm font-semibold">
+                    <i data-lucide="user-plus" class="w-4 h-4"></i>
+                    <span>Mitglied hinzufügen</span>
+                </button>
+            </div>
+
+            <div id="team-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </div>
+    </section>
+
+    <!-- ==================== 6. NEUIGKEITEN (ALLGEMEIN) ==================== -->
+    <section id="neuigkeiten" class="py-20 sm:py-24 bg-base-900 border-b border-base-800">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between mb-10 gap-4">
+                <div>
+                    <span data-editable-key="news.kicker" class="text-xs font-mono uppercase tracking-wider text-brand-400">Ankündigungen</span>
+                    <h2 data-editable-key="news.heading" class="text-2xl sm:text-4xl font-bold text-white mt-1">Neuigkeiten</h2>
+                </div>
+                <button onclick="openNewsModal('studio')" class="admin-only hidden inline-flex items-center gap-1.5 px-3.5 py-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-white text-xs sm:text-sm font-semibold shrink-0">
+                    <i data-lucide="plus" class="w-4 h-4"></i>
+                    <span>Neuigkeit posten</span>
+                </button>
+            </div>
+
+            <div id="studio-news-list" class="space-y-5"></div>
+        </div>
+    </section>
+
+    <!-- ==================== 7. SPIELER-REPORTS (MIT DISCORD WEBHOOK BIS 25 MB) ==================== -->
+    <section id="spieler-reports" class="py-20 sm:py-24 border-b border-base-800">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-10">
+                <span data-editable-key="reports.kicker" class="text-xs font-mono uppercase tracking-wider text-brand-400">Moderation</span>
+                <h2 data-editable-key="reports.heading" class="text-2xl sm:text-4xl font-bold text-white mt-1">Spieler-Reports</h2>
+                <p data-editable-key="reports.sub" class="text-slate-400 mt-2 text-sm sm:text-base">
+                    Melde hier Regelverstöße oder Vorfälle mit Bild- oder Videobeweis (max. 25 MB). Dein Report wird direkt an unser Team auf Discord gesendet.
+                </p>
+            </div>
+
+            <div class="panel-card rounded-xl p-6 sm:p-8">
+                <form id="report-form" onsubmit="submitPlayerReport(event)" class="space-y-5">
+                    <!-- Pflichtfeld: Roblox- oder Discord-Name -->
+                    <div>
+                        <label for="report-username" class="block text-sm font-medium text-slate-200 mb-1.5">
+                            <span data-editable-key="reports.field.userLabel">Dein Roblox- oder Discord-Name</span> <span class="text-rose-400">*</span>
+                        </label>
+                        <input type="text" id="report-username" required placeholder="z. B. Max_TheDev oder max#0001" class="w-full px-3.5 py-2.5 rounded-lg bg-base-950 border border-base-700 focus:border-brand-500 text-white placeholder-slate-500 text-sm outline-none transition-colors">
+                    </div>
+
+                    <!-- Optionales Feld: Nachricht -->
+                    <div>
+                        <label for="report-message" class="block text-sm font-medium text-slate-200 mb-1.5">
+                            <span data-editable-key="reports.field.msgLabel">Nachricht / Beschreibung</span> <span data-editable-key="reports.field.msgOpt" class="text-xs font-normal text-slate-400">(optional)</span>
+                        </label>
+                        <textarea id="report-message" rows="4" placeholder="Kurze Beschreibung des Vorfalls..." class="w-full px-3.5 py-2.5 rounded-lg bg-base-950 border border-base-700 focus:border-brand-500 text-white placeholder-slate-500 text-sm outline-none transition-colors"></textarea>
+                    </div>
+
+                    <!-- Datei-Upload bis 25 MB -->
+                    <div>
+                        <label class="block text-sm font-medium text-slate-200 mb-1.5">
+                            <span data-editable-key="reports.field.fileLabel">Bild oder Video hochladen</span> <span data-editable-key="reports.field.fileHint" class="text-xs font-normal text-slate-400">(max. 25 MB • PNG, JPG, GIF, WEBP, MP4, MOV, WEBM)</span>
+                        </label>
+                        <div id="report-dropzone" onclick="document.getElementById('report-file-input').click()" class="border border-dashed border-base-700 hover:border-brand-500 bg-base-950 rounded-xl p-6 text-center cursor-pointer transition-colors">
+                            <input type="file" id="report-file-input" accept="image/png,image/jpeg,image/gif,image/webp,video/mp4,video/quicktime,video/webm" class="hidden" onchange="handleReportFileSelect(event)">
+                            <div id="report-upload-placeholder" class="space-y-1.5">
+                                <div class="w-10 h-10 rounded-lg bg-base-900 border border-base-800 flex items-center justify-center text-brand-400 mx-auto">
+                                    <i data-lucide="upload" class="w-5 h-5"></i>
+                                </div>
+                                <p data-editable-key="reports.drop.title" class="text-sm font-medium text-slate-200">Datei auswählen oder hierher ziehen</p>
+                                <p data-editable-key="reports.drop.sub" class="text-xs text-slate-500">Bilder & Videos bis maximal 25 MB</p>
+                            </div>
+
+                            <div id="report-file-preview" class="hidden space-y-3">
+                                <div id="report-preview-media" class="max-h-56 overflow-hidden rounded-lg flex items-center justify-center bg-black"></div>
+                                <div class="flex items-center justify-between bg-base-900 px-3.5 py-2 rounded-lg border border-base-800 text-xs">
+                                    <span id="report-file-name" class="font-mono text-slate-200 truncate max-w-[65%]"></span>
+                                    <div class="flex items-center gap-3">
+                                        <span id="report-file-size" class="text-slate-400"></span>
+                                        <button type="button" onclick="clearReportFile(event)" class="text-rose-400 hover:text-rose-300 font-medium">Entfernen</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <p id="report-file-error" class="hidden text-xs text-rose-400 mt-1.5"></p>
+                    </div>
+
+                    <div id="report-status-box" class="hidden rounded-lg p-3.5 text-sm"></div>
+
+                    <button type="submit" id="report-submit-btn" class="w-full py-3 px-5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors flex items-center justify-center gap-2">
+                        <i data-lucide="send" class="w-4 h-4"></i>
+                        <span data-editable-key="reports.submitBtn">Report absenden</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== 8. KONTAKT ==================== -->
+    <section id="kontakt" class="py-20 sm:py-24 bg-base-900">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="mb-10">
+                <span data-editable-key="contact.kicker" class="text-xs font-mono uppercase tracking-wider text-brand-400">Erreichbarkeit</span>
+                <h2 data-editable-key="contact.heading" class="text-2xl sm:text-4xl font-bold text-white mt-1">Kontakt</h2>
+                <p data-editable-key="contact.sub" class="text-slate-400 mt-2 text-sm sm:text-base">
+                    Du erreichst uns am schnellsten direkt über unseren Discord-Server oder über unsere Roblox-Gruppe.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <a href="https://discord.gg/numDP5Dc9x" target="_blank" rel="noopener noreferrer" class="panel-card rounded-xl p-6 flex items-start justify-between gap-4 hover:border-brand-500/50 group">
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-brand-500/15 border border-brand-500/30 flex items-center justify-center text-brand-400 mb-4">
+                            <i data-lucide="message-square" class="w-5 h-5"></i>
+                        </div>
+                        <h3 data-editable-key="contact.discord.title" class="text-lg font-bold text-white">Discord-Server</h3>
+                        <p data-editable-key="contact.discord.desc" class="text-sm text-slate-400 mt-1">Support, Neuigkeiten, Austausch mit der Community und direkte Kontaktaufnahme mit dem Team.</p>
+                        <span data-editable-key="contact.discord.handle" class="inline-block mt-4 text-xs font-mono text-brand-400">discord.gg/numDP5Dc9x</span>
+                    </div>
+                    <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-500 group-hover:text-brand-400 shrink-0"></i>
+                </a>
+
+                <a href="https://www.roblox.com/de/communities/14664464/Max-Development#!/about" target="_blank" rel="noopener noreferrer" class="panel-card rounded-xl p-6 flex items-start justify-between gap-4 hover:border-brand-500/50 group">
+                    <div>
+                        <div class="w-10 h-10 rounded-lg bg-brand-500/15 border border-brand-500/30 flex items-center justify-center text-brand-400 mb-4">
+                            <i data-lucide="gamepad-2" class="w-5 h-5"></i>
+                        </div>
+                        <h3 data-editable-key="contact.roblox.title" class="text-lg font-bold text-white">Roblox-Gruppe</h3>
+                        <p data-editable-key="contact.roblox.desc" class="text-sm text-slate-400 mt-1">Unsere offizielle Entwicklergruppe auf Roblox mit allen veröffentlichten Spielen und Projekten.</p>
+                        <span data-editable-key="contact.roblox.handle" class="inline-block mt-4 text-xs font-mono text-brand-400">Max Development auf Roblox</span>
+                    </div>
+                    <i data-lucide="arrow-up-right" class="w-5 h-5 text-slate-500 group-hover:text-brand-400 shrink-0"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== FOOTER ==================== -->
+    <footer class="bg-base-950 border-t border-base-800 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+            <div data-editable-key="footer.copy">
+                © 2023–2026 <strong class="text-slate-200">Max Development</strong> • Wir sind füreinander da
+            </div>
+            <div class="flex items-center gap-5">
+                <button onclick="reopenLegalModal()" data-editable-key="footer.legal" class="hover:text-white transition-colors underline underline-offset-4">
+                    Rechtliche Hinweise & AGB
+                </button>
+                <a href="https://discord.gg/numDP5Dc9x" target="_blank" rel="noopener noreferrer" data-editable-key="footer.discord" class="hover:text-white transition-colors">Discord</a>
+                <a href="https://www.roblox.com/de/communities/14664464/Max-Development#!/about" target="_blank" rel="noopener noreferrer" data-editable-key="footer.roblox" class="hover:text-white transition-colors">Roblox</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ==================== 9. VERSTECKTES ADMIN-LOGIN MODAL (STRG + ALT + SHIFT) ==================== -->
+    <div id="admin-login-modal" class="hidden fixed inset-0 z-[90] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="w-full max-w-sm bg-base-900 border border-base-700 rounded-xl shadow-2xl overflow-hidden">
+            <div class="px-5 py-4 bg-base-850 border-b border-base-700 flex items-center justify-between">
+                <h3 class="font-bold text-white text-sm">Team-Anmeldung</h3>
+                <button onclick="closeAdminLoginModal()" class="text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <form onsubmit="handleAdminLogin(event)" class="p-5 space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Nutzername</label>
+                    <input type="text" id="login-username" required autocomplete="username" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 focus:border-brand-500 text-white text-sm outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Passwort</label>
+                    <input type="password" id="login-password" required autocomplete="current-password" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 focus:border-brand-500 text-white text-sm outline-none">
+                </div>
+                <p id="login-error-msg" class="hidden text-xs text-rose-400 bg-rose-950/40 border border-rose-500/30 rounded-lg px-3 py-2"></p>
+                <button type="submit" class="w-full py-2.5 rounded-lg bg-brand-500 hover:bg-brand-600 text-white font-semibold text-sm transition-colors">
+                    Anmelden
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== ADMIN EDITOR MODAL ==================== -->
+    <div id="editor-modal" class="hidden fixed inset-0 z-[90] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+        <div class="w-full max-w-lg bg-base-900 border border-base-700 rounded-xl shadow-2xl overflow-hidden my-auto">
+            <div class="px-5 py-4 bg-base-850 border-b border-base-700 flex items-center justify-between">
+                <h3 id="editor-modal-title" class="font-bold text-white text-sm">Bearbeiten</h3>
+                <button onclick="closeEditorModal()" class="text-slate-400 hover:text-white">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+            <form id="editor-modal-form" class="p-5 space-y-4">
+                <div id="editor-modal-fields" class="space-y-4"></div>
+                <div class="pt-2 flex items-center justify-end gap-2.5">
+                    <button type="button" onclick="closeEditorModal()" class="px-4 py-2 rounded-lg bg-base-800 hover:bg-base-700 text-slate-200 text-xs font-medium">Abbrechen</button>
+                    <button type="submit" class="px-4 py-2 rounded-lg bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold">Speichern</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ==================== TOAST BENACHRICHTIGUNG ==================== -->
+    <div id="toast-container" class="fixed bottom-4 right-4 z-[110] space-y-2 pointer-events-none"></div>
+
+    <!-- ==================== JAVASCRIPT & PERSISTENTE SPEICHERUNG ==================== -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // ==================== STANDARD-HINTERGRUNDBILDER ====================
+        const DEFAULT_SLIDES = [
+            { url: "image_293ae6.jpg" },
+            { url: "image_293b23.jpg" },
+            { url: "image_293b06.jpg" },
+            { url: "image_293821.jpg" }
+        ];
+
+        // ==================== STANDARD-INHALTE ====================
+        const DEFAULT_DATA = {
+            slides: DEFAULT_SLIDES,
+            webhookUrl: "https://discord.com/api/webhooks/1570485847642345673/qsL85clegT6wSQ1_HrSMg7azIJYeXrbX77dTZGjAZtaTTryFVXv1bJFzYY0IYdSE7PHl",
+            customTexts: {},
+            aboutText: "Max Development wurde 2023 mit dem Ziel gegründet, detailverliebte und realistische Roblox-Erlebnisse zu erschaffen. Was als kleines Team begann, entwickelt heute verschiedene Spiele auf Roblox – allen voran unser Hauptprojekt, den Tram Simulator Weidenheim. Bei uns steht der Zusammenhalt an erster Stelle: Ganz nach unserem Leitspruch 'Wir sind füreinander da' arbeiten wir gemeinsam an neuen Strecken, Fahrzeugen und Systemen für unsere Community.",
+            tramInfo: {
+                title: "Stadtbahn-Simulation in Weidenheim",
+                desc: "Im Tram Simulator Weidenheim übernimmst du den Fahrdienst auf verschiedenen Stadtbahnlinien durch Weidenheim. Dich erwarten realistische Fahrphysik, ein interaktives Fahrgastsystem, originalgetreu gestaltete Haltestellen wie die Peiner Straße oder Messe/Nord sowie detailreiche Bahnen vom Typ TW 6000 und TW 2000.",
+                robloxUrl: "https://www.roblox.com/de/communities/14664464/Max-Development#!/about",
+                previewImg: "image_293ae6.jpg"
+            },
+            vehicles: [
+                {
+                    id: "v1",
+                    name: "TW 6000 – Max Development Edition (6241a)",
+                    type: "Stadtbahn • Sonderlackierung",
+                    desc: "Blaue Max Development Sonderbeklebung mit Studio-Logo und dem Leitspruch „Wir sind füreinander da: Max Development“.",
+                    img: "image_293ae6.jpg",
+                    status: "Verfügbar"
+                },
+                {
+                    id: "v2",
+                    name: "TW 6000 – Klassisch Grün (6129b / 6166b)",
+                    type: "Stadtbahn • Standard-Fuhrpark",
+                    desc: "Bewährte Stadtbahn in klassischer grüner Lackierung – einsetzbar als Einzelwagen oder in Doppeltraktion.",
+                    img: "image_293b06.jpg",
+                    status: "Verfügbar"
+                },
+                {
+                    id: "v3",
+                    name: "TW 2000 – Silber-Grün (2025a)",
+                    type: "Stadtbahn • Moderne Generation",
+                    desc: "Moderner Stadtbahnwagen in silber-grüner Lackierung mit digitaler Zielanzeige und großzügigem Innenraum.",
+                    img: "image_293821.jpg",
+                    status: "Verfügbar"
+                }
+            ],
+            lines: [
+                {
+                    id: "l1",
+                    number: "Linie 8",
+                    route: "Hauptbahnhof ↔ Peiner Straße ↔ Messe/Nord",
+                    stops: "Peiner Straße, Rathausplatz, Zentralstation, Messe/Nord",
+                    desc: "Wichtige Stadtbahnlinie durch Weidenheim mit eigenem Gleiskörper entlang der Peiner Straße."
+                },
+                {
+                    id: "l2",
+                    number: "Dienstfahrt / Sonderzug",
+                    route: "Betriebshof ↔ Gesamtes Streckennetz",
+                    stops: "Betriebshof Weidenheim, Wendeschleife Süd, Messe/Nord",
+                    desc: "Überführungsfahrten, Fahrschulbetrieb und Sonderfahrten mit dem Max Development Themenzug."
+                }
+            ],
+            team: [
+                {
+                    id: "t1",
+                    name: "Max_TheDev",
+                    role: "Owner",
+                    bio: "Gründer von Max Development, Projektleitung & Hauptentwickler für den Tram Simulator Weidenheim."
+                },
+                {
+                    id: "t2",
+                    name: "DeveloperLucas",
+                    role: "Co-Owner",
+                    bio: "Stellvertretende Studioleitung, Community-Management & Entwicklung."
+                }
+            ],
+            studioNews: [
+                {
+                    id: "sn1",
+                    title: "Offizielle Studio-Website online",
+                    content: "Willkommen auf der neuen Website von Max Development. Hier findet ihr ab sofort alle Infos zu unserem Studio, dem Tram Simulator Weidenheim sowie das Spieler-Report-System.",
+                    imageUrl: "",
+                    authorName: "DeveloperLucas",
+                    authorRole: "Co-Owner",
+                    dateStr: "12.11.2026",
+                    timeStr: "18:43 Uhr",
+                    timestamp: 1794505380000
+                }
+            ],
+            tramNews: [
+                {
+                    id: "tn1",
+                    title: "TW 6000 (6241a) in Max Development Lackierung",
+                    content: "Der TW 6000 mit der Wagennummer 6241a in blauer Max Development Sonderlackierung ist ab sofort Teil unseres Fuhrparks in Weidenheim.",
+                    imageUrl: "",
+                    authorName: "Max_TheDev",
+                    authorRole: "Owner",
+                    dateStr: "12.11.2026",
+                    timeStr: "18:30 Uhr",
+                    timestamp: 1794504600000
+                }
+            ]
+        };
+
+        // ==================== GLOBALE VARIABLEN ====================
+        let siteData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+        let currentAdmin = null;
+        let isInlineEditMode = false;
+        const DEFAULT_EDITABLE_HTML = {};
+        let currentSlideIndex = 0;
+        let slideInterval = null;
+        let selectedReportFile = null;
+
+        let db = null;
+        let firestoreDocRef = null;
+        let isCloudReady = false;
+
+        // ==================== DATENBANK & LOCALSTORAGE ====================
+        const LOCAL_STORAGE_KEY = "max_dev_studio_v2";
+
+        function loadFromLocalFallback() {
+            try {
+                const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    siteData = { ...DEFAULT_DATA, ...parsed };
+                }
+            } catch (e) {
+                console.warn("LocalStorage Lesefehler:", e);
+            }
+        }
+
+        async function saveSiteData() {
+            try {
+                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(siteData));
+            } catch (e) {
+                console.warn("LocalStorage Speicherfehler:", e);
+            }
+
+            if (isCloudReady && firestoreDocRef) {
+                try {
+                    await setDoc(firestoreDocRef, { payload: JSON.stringify(siteData), updatedAt: Date.now() });
+                } catch (err) {
+                    console.warn("Cloud-Sync Hinweis:", err);
+                }
+            }
+        }
+
+        async function initDatabase() {
+            loadFromLocalFallback();
+            renderAll();
+
+            try {
+                if (typeof __firebase_config !== "undefined" && __firebase_config) {
+                    const firebaseConfig = JSON.parse(__firebase_config);
+                    const appId = typeof __app_id !== "undefined" ? __app_id : "max-development-web";
+                    const app = initializeApp(firebaseConfig);
+                    const auth = getAuth(app);
+                    db = getFirestore(app);
+
+                    if (typeof __initial_auth_token !== "undefined" && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+
+                    // Strikter Firestore-Pfad: /artifacts/{appId}/public/data/{collectionName}/{docId}
+                    firestoreDocRef = doc(db, "artifacts", appId, "public", "data", "siteContent", "main");
+                    isCloudReady = true;
+
+                    onSnapshot(firestoreDocRef, (snapshot) => {
+                        if (snapshot.exists() && snapshot.data().payload) {
+                            try {
+                                const cloudData = JSON.parse(snapshot.data().payload);
+                                siteData = { ...DEFAULT_DATA, ...cloudData };
+                                localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(siteData));
+                                renderAll();
+                            } catch (parseErr) {
+                                console.error("Fehler beim Parsen der Cloud-Daten:", parseErr);
+                            }
+                        } else {
+                            saveSiteData();
+                        }
+                    }, (error) => {
+                        console.warn("Firestore Listener Fallback aktiv:", error);
+                    });
+                }
+            } catch (err) {
+                console.warn("Lokaler Speichermodus aktiv:", err);
+            }
+        }
+
+        // ==================== RECHTLICHES ZUSTIMMUNGS-OVERLAY ====================
+        const LEGAL_CONSENT_KEY = "max_dev_legal_accepted_v1";
+
+        function checkLegalConsent() {
+            const modal = document.getElementById("legal-consent-modal");
+            const checkbox = document.getElementById("legal-checkbox");
+            const acceptBtn = document.getElementById("legal-accept-btn");
+            const closeExistingBtn = document.getElementById("legal-close-existing-btn");
+            const badge = document.getElementById("legal-accepted-badge");
+            const infoBox = document.getElementById("legal-timestamp-info");
+
+            checkbox.addEventListener("change", () => {
+                acceptBtn.disabled = !checkbox.checked;
+            });
+
+            const savedConsent = localStorage.getItem(LEGAL_CONSENT_KEY);
+            if (savedConsent) {
+                modal.classList.add("hidden");
+                badge.classList.remove("hidden");
+                closeExistingBtn.classList.remove("hidden");
+                infoBox.classList.remove("hidden");
+                infoBox.textContent = `Deine Zustimmung wurde gespeichert am: ${savedConsent}`;
+                checkbox.checked = true;
+                acceptBtn.disabled = false;
+            } else {
+                modal.classList.remove("hidden");
+                document.body.style.overflow = "hidden";
+            }
+        }
+
+        window.acceptLegalTerms = function() {
+            const now = new Date();
+            const formatted = `${now.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" })} um ${now.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })} Uhr`;
+            localStorage.setItem(LEGAL_CONSENT_KEY, formatted);
+
+            document.getElementById("legal-consent-modal").classList.add("hidden");
+            document.getElementById("legal-accepted-badge").classList.remove("hidden");
+            document.getElementById("legal-close-existing-btn").classList.remove("hidden");
+            const infoBox = document.getElementById("legal-timestamp-info");
+            infoBox.classList.remove("hidden");
+            infoBox.textContent = `Deine Zustimmung wurde gespeichert am: ${formatted}`;
+            document.body.style.overflow = "";
+            showToast("Nutzungsbedingungen & Datenschutz akzeptiert.", "success");
+        };
+
+        window.reopenLegalModal = function() {
+            document.getElementById("legal-consent-modal").classList.remove("hidden");
+            lucide.createIcons();
+        };
+
+        window.closeLegalModalIfAccepted = function() {
+            if (localStorage.getItem(LEGAL_CONSENT_KEY)) {
+                document.getElementById("legal-consent-modal").classList.add("hidden");
+                document.body.style.overflow = "";
+            }
+        };
+
+        // ==================== VERSTECKTES ADMIN-LOGIN (STRG + ALT + SHIFT) ====================
+        const ADMIN_ACCOUNTS = {
+            "DeveloperLucas": {
+                password: "SinusNilpferd15",
+                role: "Co-Owner"
+            },
+            "Max_TheDev": {
+                password: "YY-6194/UTKnM67-128m55#b550",
+                role: "Owner"
+            }
+        };
+
+        document.addEventListener("keydown", (e) => {
+            if (e.ctrlKey && e.altKey && e.shiftKey) {
+                e.preventDefault();
+                if (currentAdmin) {
+                    showToast(`Bereits eingeloggt als ${currentAdmin.username} (${currentAdmin.role})`, "info");
+                } else {
+                    openAdminLoginModal();
+                }
+            }
+        });
+
+        window.openAdminLoginModal = function() {
+            document.getElementById("login-error-msg").classList.add("hidden");
+            document.getElementById("login-username").value = "";
+            document.getElementById("login-password").value = "";
+            document.getElementById("admin-login-modal").classList.remove("hidden");
+            setTimeout(() => document.getElementById("login-username").focus(), 50);
+            lucide.createIcons();
+        };
+
+        window.closeAdminLoginModal = function() {
+            document.getElementById("admin-login-modal").classList.add("hidden");
+        };
+
+        window.handleAdminLogin = function(e) {
+            e.preventDefault();
+            const user = document.getElementById("login-username").value.trim();
+            const pass = document.getElementById("login-password").value;
+            const errorEl = document.getElementById("login-error-msg");
+
+            const account = ADMIN_ACCOUNTS[user];
+            if (account && account.password === pass) {
+                currentAdmin = { username: user, role: account.role };
+                sessionStorage.setItem("max_dev_admin_session", JSON.stringify(currentAdmin));
+                closeAdminLoginModal();
+                applyAdminUIState();
+                showToast(`Eingeloggt als ${user} (${account.role})`, "success");
+            } else {
+                errorEl.textContent = "Nutzername oder Passwort falsch.";
+                errorEl.classList.remove("hidden");
+            }
+        };
+
+        window.logoutAdmin = function() {
+            if (isInlineEditMode) {
+                setInlineEditMode(false);
+            }
+            currentAdmin = null;
+            sessionStorage.removeItem("max_dev_admin_session");
+            applyAdminUIState();
+            showToast("Abgemeldet.", "info");
+        };
+
+        function restoreAdminSession() {
+            try {
+                const savedSession = sessionStorage.getItem("max_dev_admin_session");
+                if (savedSession) {
+                    currentAdmin = JSON.parse(savedSession);
+                }
+            } catch (e) {}
+            applyAdminUIState();
+        }
+
+        function applyAdminUIState() {
+            const adminBar = document.getElementById("admin-bar");
+            const header = document.getElementById("main-header");
+            const adminOnlyEls = document.querySelectorAll(".admin-only");
+
+            if (currentAdmin) {
+                adminBar.classList.remove("hidden");
+                header.style.top = `${adminBar.offsetHeight || 44}px`;
+                document.getElementById("admin-display-badge").textContent = `${currentAdmin.username} (${currentAdmin.role})`;
+                adminOnlyEls.forEach(el => el.classList.remove("hidden"));
+            } else {
+                adminBar.classList.add("hidden");
+                header.style.top = "0px";
+                adminOnlyEls.forEach(el => el.classList.add("hidden"));
+            }
+            lucide.createIcons();
+        }
+
+        // ==================== INLINE-BEARBEITUNG FÜR ALLE TEXTE ====================
+        function captureDefaultEditableTexts() {
+            document.querySelectorAll("[data-editable-key]").forEach((el) => {
+                const key = el.getAttribute("data-editable-key");
+                if (key && !(key in DEFAULT_EDITABLE_HTML)) {
+                    DEFAULT_EDITABLE_HTML[key] = el.innerHTML;
+                }
+            });
+        }
+
+        function applyCustomTexts() {
+            if (!siteData.customTexts) siteData.customTexts = {};
+            document.querySelectorAll("[data-editable-key]").forEach((el) => {
+                const key = el.getAttribute("data-editable-key");
+                if (key && key in siteData.customTexts) {
+                    el.innerHTML = siteData.customTexts[key];
+                }
+            });
+        }
+
+        function setInlineEditMode(enabled) {
+            isInlineEditMode = enabled;
+            const toggleBtn = document.getElementById("toggle-inline-edit-btn");
+            const toggleLabel = document.getElementById("toggle-inline-edit-label");
+            const saveBtn = document.getElementById("save-inline-texts-btn");
+
+            if (enabled) {
+                document.body.classList.add("inline-edit-active");
+                toggleBtn.className = "px-2.5 py-1 rounded bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-bold transition-colors flex items-center gap-1.5";
+                toggleLabel.textContent = "Alle Texte bearbeiten: AN";
+                saveBtn.classList.remove("hidden");
+
+                document.querySelectorAll("[data-editable-key]").forEach((el) => {
+                    el.setAttribute("contenteditable", "true");
+                });
+            } else {
+                document.body.classList.remove("inline-edit-active");
+                toggleBtn.className = "px-2.5 py-1 rounded bg-brand-500 hover:bg-brand-600 text-white text-xs font-semibold transition-colors flex items-center gap-1.5";
+                toggleLabel.textContent = "Alle Texte bearbeiten: AUS";
+                saveBtn.classList.add("hidden");
+
+                document.querySelectorAll("[data-editable-key]").forEach((el) => {
+                    el.removeAttribute("contenteditable");
+                });
+            }
+            applyAdminUIState();
+        }
+
+        window.toggleInlineEditMode = async function() {
+            if (!currentAdmin) return;
+            if (isInlineEditMode) {
+                await window.saveAllInlineTexts(true);
+                setInlineEditMode(false);
+            } else {
+                setInlineEditMode(true);
+                showToast("Text-Bearbeitungsmodus aktiv: Klicke auf einen beliebigen Text auf der Seite.", "info");
+            }
+        };
+
+        window.saveAllInlineTexts = async function(silent = false) {
+            if (!currentAdmin) return;
+            if (!siteData.customTexts) siteData.customTexts = {};
+
+            document.querySelectorAll("[data-editable-key]").forEach((el) => {
+                const key = el.getAttribute("data-editable-key");
+                if (!key) return;
+                const currentHtml = el.innerHTML;
+                siteData.customTexts[key] = currentHtml;
+
+                // Synchronisiere strukturierte Felder mit den Inline-Texten
+                if (key === "about.mainText") {
+                    siteData.aboutText = el.innerText.trim();
+                } else if (key === "tram.info.title") {
+                    siteData.tramInfo.title = el.innerText.trim();
+                } else if (key === "tram.info.desc") {
+                    siteData.tramInfo.desc = el.innerText.trim();
+                }
+            });
+
+            await saveSiteData();
+            if (!silent) {
+                showToast("Alle geänderten Texte wurden gespeichert!", "success");
+            }
+        };
+
+        window.openResetTextsConfirmModal = function() {
+            if (!currentAdmin) return;
+            const fields = `
+                <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    Möchtest du wirklich alle manuell bearbeiteten Seitentexte auf die ursprünglichen Standardtexte zurücksetzen?
+                </p>
+            `;
+            openEditorModal("Standardtexte wiederherstellen", fields, async () => {
+                siteData.customTexts = {};
+                siteData.aboutText = DEFAULT_DATA.aboutText;
+                siteData.tramInfo.title = DEFAULT_DATA.tramInfo.title;
+                siteData.tramInfo.desc = DEFAULT_DATA.tramInfo.desc;
+
+                document.querySelectorAll("[data-editable-key]").forEach((el) => {
+                    const key = el.getAttribute("data-editable-key");
+                    if (key && key in DEFAULT_EDITABLE_HTML) {
+                        el.innerHTML = DEFAULT_EDITABLE_HTML[key];
+                    }
+                });
+
+                await saveSiteData();
+                showToast("Alle Texte wurden auf den Standard zurückgesetzt.", "info");
+            });
+        };
+
+        // Verhindert Navigation bei Klick auf Links/Buttons, solange Inline-Edit-Modus aktiv ist, und speichert beim Verlassen eines Feldes automatisch
+        document.addEventListener("click", (e) => {
+            if (!isInlineEditMode) return;
+            const editableTarget = e.target.closest("[data-editable-key]");
+            if (editableTarget) {
+                const parentInteractive = editableTarget.closest("a, button, label");
+                if (parentInteractive && !parentInteractive.closest("#admin-bar")) {
+                    e.preventDefault();
+                }
+            }
+        }, true);
+
+        document.addEventListener("focusout", (e) => {
+            if (!isInlineEditMode || !currentAdmin) return;
+            const editableTarget = e.target.closest("[data-editable-key]");
+            if (editableTarget) {
+                window.saveAllInlineTexts(true);
+            }
+        });
+
+        // ==================== HERO HINTERGRUND-SLIDER ====================
+        function renderHeroSlider() {
+            const container = document.getElementById("hero-slider-container");
+            const dotsContainer = document.getElementById("hero-slider-dots");
+            const slides = siteData.slides && siteData.slides.length > 0 ? siteData.slides : DEFAULT_SLIDES;
+
+            if (currentSlideIndex >= slides.length) currentSlideIndex = 0;
+
+            container.innerHTML = slides.map((s, idx) => `
+                <div class="hero-slide ${idx === currentSlideIndex ? "active" : ""}" style="background-image: url('${escapeAttr(s.url)}');"></div>
+            `).join("");
+
+            dotsContainer.innerHTML = slides.map((_, idx) => `
+                <button onclick="goToHeroSlide(${idx})" aria-label="Bild ${idx + 1}" class="h-1.5 rounded-full transition-all ${idx === currentSlideIndex ? "w-5 bg-brand-500" : "w-1.5 bg-slate-500 hover:bg-slate-300"}"></button>
+            `).join("");
+
+            if (slideInterval) clearInterval(slideInterval);
+            slideInterval = setInterval(() => {
+                nextHeroSlide();
+            }, 6500);
+        }
+
+        window.nextHeroSlide = function() {
+            const slides = siteData.slides || DEFAULT_SLIDES;
+            currentSlideIndex = (currentSlideIndex + 1) % slides.length;
+            updateHeroSlideClasses();
+        };
+
+        window.prevHeroSlide = function() {
+            const slides = siteData.slides || DEFAULT_SLIDES;
+            currentSlideIndex = (currentSlideIndex - 1 + slides.length) % slides.length;
+            updateHeroSlideClasses();
+        };
+
+        window.goToHeroSlide = function(idx) {
+            currentSlideIndex = idx;
+            updateHeroSlideClasses();
+        };
+
+        function updateHeroSlideClasses() {
+            const slideEls = document.querySelectorAll("#hero-slider-container .hero-slide");
+            const dotEls = document.querySelectorAll("#hero-slider-dots button");
+
+            slideEls.forEach((el, idx) => {
+                el.classList.toggle("active", idx === currentSlideIndex);
+            });
+            dotEls.forEach((el, idx) => {
+                el.className = `h-1.5 rounded-full transition-all ${idx === currentSlideIndex ? "w-5 bg-brand-500" : "w-1.5 bg-slate-500 hover:bg-slate-300"}`;
+            });
+        }
+
+        // ==================== TRAM SIMULATOR WEIDENHEIM TABS ====================
+        window.switchTramTab = function(tabName) {
+            document.querySelectorAll(".tram-panel").forEach(p => p.classList.add("hidden"));
+            document.getElementById(`tram-panel-${tabName}`).classList.remove("hidden");
+
+            document.querySelectorAll(".tram-tab-btn").forEach(btn => {
+                btn.className = "tram-tab-btn px-4 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 bg-base-850 text-slate-300 hover:bg-base-800 border border-base-700";
+            });
+            const activeBtn = document.getElementById(`tab-btn-${tabName}`);
+            activeBtn.className = "tram-tab-btn px-4 py-2.5 rounded-lg font-semibold text-sm flex items-center gap-2 bg-brand-500 text-white";
+            lucide.createIcons();
+        };
+
+        // ==================== RENDER-FUNKTIONEN ====================
+        function renderAll() {
+            renderHeroSlider();
+            renderAbout();
+            renderTramInfo();
+            renderVehicles();
+            renderLines();
+            renderTeam();
+            renderNewsList("studio", "studio-news-list", siteData.studioNews);
+            renderNewsList("tram", "tram-news-list", siteData.tramNews);
+            applyCustomTexts();
+            if (isInlineEditMode) {
+                document.querySelectorAll("[data-editable-key]").forEach((el) => {
+                    el.setAttribute("contenteditable", "true");
+                });
+            }
+            applyAdminUIState();
+        }
+
+        function renderAbout() {
+            document.getElementById("about-text").textContent = siteData.aboutText || DEFAULT_DATA.aboutText;
+        }
+
+        function renderTramInfo() {
+            document.getElementById("tram-info-title").textContent = siteData.tramInfo.title;
+            document.getElementById("tram-info-desc").textContent = siteData.tramInfo.desc;
+            document.getElementById("tram-roblox-link").href = siteData.tramInfo.robloxUrl || "https://www.roblox.com/de/communities/14664464/Max-Development#!/about";
+            const imgEl = document.getElementById("tram-info-preview-img");
+            imgEl.src = siteData.tramInfo.previewImg || "image_293ae6.jpg";
+            imgEl.onerror = () => { imgEl.src = "https://placehold.co/800x450/10131A/2563EB?text=Tram+Simulator+Weidenheim"; };
+        }
+
+        function renderVehicles() {
+            const grid = document.getElementById("vehicles-grid");
+            if (!siteData.vehicles || siteData.vehicles.length === 0) {
+                grid.innerHTML = `<div class="col-span-full panel-card rounded-xl p-8 text-center text-slate-400 text-sm">Noch keine Fahrzeuge eingetragen.</div>`;
+                return;
+            }
+            grid.innerHTML = siteData.vehicles.map(v => `
+                <div class="panel-card rounded-xl overflow-hidden flex flex-col justify-between">
+                    <div>
+                        <div class="relative h-48 bg-base-950 overflow-hidden border-b border-base-800">
+                            <img src="${escapeAttr(v.img)}" onerror="this.src='https://placehold.co/600x350/10131A/2563EB?text=Stadtbahn+Weidenheim'" alt="${escapeAttr(v.name)}" class="w-full h-full object-cover">
+                            <span class="absolute top-3 right-3 px-2.5 py-1 rounded bg-base-950/90 border border-base-700 text-slate-200 text-xs font-medium">
+                                ${escapeHtml(v.status || "Verfügbar")}
+                            </span>
+                        </div>
+                        <div class="p-5">
+                            <span class="text-xs font-mono text-brand-400">${escapeHtml(v.type)}</span>
+                            <h4 class="text-base sm:text-lg font-bold text-white mt-1 mb-2">${escapeHtml(v.name)}</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">${escapeHtml(v.desc)}</p>
+                        </div>
+                    </div>
+                    <div class="admin-only hidden px-5 pb-4 pt-2 border-t border-base-800 flex items-center justify-end gap-2">
+                        <button onclick="openVehicleModal('${v.id}')" class="px-3 py-1 rounded bg-base-800 hover:bg-base-700 text-slate-200 text-xs font-medium">Bearbeiten</button>
+                        <button onclick="deleteItem('vehicles', '${v.id}')" class="px-3 py-1 rounded bg-rose-600/20 hover:bg-rose-600/35 text-rose-300 text-xs font-medium">Löschen</button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function renderLines() {
+            const grid = document.getElementById("lines-grid");
+            if (!siteData.lines || siteData.lines.length === 0) {
+                grid.innerHTML = `<div class="col-span-full panel-card rounded-xl p-8 text-center text-slate-400 text-sm">Noch keine Linien eingetragen.</div>`;
+                return;
+            }
+            grid.innerHTML = siteData.lines.map(l => `
+                <div class="panel-card rounded-xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between gap-3 mb-3">
+                            <span class="px-3 py-1 rounded bg-brand-500 text-white font-bold text-xs">${escapeHtml(l.number)}</span>
+                            <span class="text-xs font-mono text-slate-500">Weidenheim</span>
+                        </div>
+                        <h4 class="text-base sm:text-lg font-bold text-white mb-2">${escapeHtml(l.route)}</h4>
+                        <p class="text-sm text-slate-400 mb-4 leading-relaxed">${escapeHtml(l.desc)}</p>
+                        <div class="bg-base-950 border border-base-800 rounded-lg p-3">
+                            <span class="text-[11px] font-mono uppercase text-brand-400 block mb-1">Haltestellen</span>
+                            <p class="text-xs text-slate-300">${escapeHtml(l.stops)}</p>
+                        </div>
+                    </div>
+                    <div class="admin-only hidden pt-4 mt-4 border-t border-base-800 flex items-center justify-end gap-2">
+                        <button onclick="openLineModal('${l.id}')" class="px-3 py-1 rounded bg-base-800 hover:bg-base-700 text-slate-200 text-xs font-medium">Bearbeiten</button>
+                        <button onclick="deleteItem('lines', '${l.id}')" class="px-3 py-1 rounded bg-rose-600/20 hover:bg-rose-600/35 text-rose-300 text-xs font-medium">Löschen</button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function renderTeam() {
+            const grid = document.getElementById("team-grid");
+            if (!siteData.team || siteData.team.length === 0) {
+                grid.innerHTML = `<div class="col-span-full panel-card rounded-xl p-8 text-center text-slate-400 text-sm">Noch keine Teammitglieder eingetragen.</div>`;
+                return;
+            }
+            grid.innerHTML = siteData.team.map(m => `
+                <div class="panel-card rounded-xl p-6 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3.5 mb-3">
+                            <div class="w-11 h-11 rounded-lg bg-base-850 border border-base-700 flex items-center justify-center text-white font-bold text-base shrink-0">
+                                ${escapeHtml(m.name.charAt(0).toUpperCase())}
+                            </div>
+                            <div>
+                                <h3 class="text-base font-bold text-white">${escapeHtml(m.name)}</h3>
+                                <span class="inline-block mt-0.5 px-2 py-0.5 rounded text-xs font-medium bg-brand-500/15 text-brand-400 border border-brand-500/30">
+                                    ${escapeHtml(m.role)}
+                                </span>
+                            </div>
+                        </div>
+                        <p class="text-sm text-slate-400 leading-relaxed">${escapeHtml(m.bio)}</p>
+                    </div>
+                    <div class="admin-only hidden pt-4 mt-4 border-t border-base-800 flex items-center justify-end gap-2">
+                        <button onclick="openTeamModal('${m.id}')" class="px-3 py-1 rounded bg-base-800 hover:bg-base-700 text-slate-200 text-xs font-medium">Bearbeiten</button>
+                        <button onclick="deleteItem('team', '${m.id}')" class="px-3 py-1 rounded bg-rose-600/20 hover:bg-rose-600/35 text-rose-300 text-xs font-medium">Löschen</button>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function renderNewsList(category, containerId, items) {
+            const container = document.getElementById(containerId);
+            if (!items || items.length === 0) {
+                container.innerHTML = `<div class="panel-card rounded-xl p-8 text-center text-slate-400 text-sm">Aktuell liegen noch keine Beiträge vor.</div>`;
+                return;
+            }
+
+            // Neueste Posts stehen immer ganz oben
+            const sorted = [...items].sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+
+            container.innerHTML = sorted.map((post) => `
+                <article class="panel-card rounded-xl p-6">
+                    <div class="flex flex-wrap items-center justify-between gap-2 pb-3 mb-3 border-b border-base-800 text-xs">
+                        <span class="font-semibold text-brand-400">
+                            ${escapeHtml(post.authorName)} (${escapeHtml(post.authorRole)})
+                        </span>
+                        <span class="font-mono text-slate-400">
+                            ${escapeHtml(post.dateStr)} um ${escapeHtml(post.timeStr)}
+                        </span>
+                    </div>
+
+                    <h3 class="text-lg sm:text-xl font-bold text-white mb-2">${escapeHtml(post.title)}</h3>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed whitespace-pre-line">${escapeHtml(post.content)}</p>
+
+                    ${post.imageUrl ? `
+                        <div class="mt-4 rounded-lg overflow-hidden border border-base-800 bg-base-950">
+                            <img src="${escapeAttr(post.imageUrl)}" onerror="this.style.display='none'" alt="${escapeAttr(post.title)}" class="w-full max-h-96 object-cover">
+                        </div>
+                    ` : ""}
+
+                    <div class="admin-only hidden pt-4 mt-4 border-t border-base-800 flex items-center justify-end gap-2">
+                        <button onclick="openNewsModal('${category}', '${post.id}')" class="px-3 py-1 rounded bg-base-800 hover:bg-base-700 text-slate-200 text-xs font-medium">Bearbeiten</button>
+                        <button onclick="deleteNews('${category}', '${post.id}')" class="px-3 py-1 rounded bg-rose-600/20 hover:bg-rose-600/35 text-rose-300 text-xs font-medium">Löschen</button>
+                    </div>
+                </article>
+            `).join("");
+        }
+
+        // ==================== ADMIN MODAL-EDITOREN ====================
+        function openEditorModal(title, fieldsHtml, onSubmitCallback) {
+            if (!currentAdmin) return;
+            document.getElementById("editor-modal-title").textContent = title;
+            document.getElementById("editor-modal-fields").innerHTML = fieldsHtml;
+            const form = document.getElementById("editor-modal-form");
+            form.onsubmit = async (e) => {
+                e.preventDefault();
+                await onSubmitCallback();
+                closeEditorModal();
+                renderAll();
+            };
+            document.getElementById("editor-modal").classList.remove("hidden");
+            lucide.createIcons();
+        }
+
+        window.closeEditorModal = function() {
+            document.getElementById("editor-modal").classList.add("hidden");
+        };
+
+        // Neuigkeiten posten / bearbeiten
+        window.openNewsModal = function(category, existingId = null) {
+            const listKey = category === "tram" ? "tramNews" : "studioNews";
+            const existing = existingId ? siteData[listKey].find(n => n.id === existingId) : null;
+
+            const fields = `
+                <div class="bg-base-950 border border-base-800 rounded-lg p-3 text-xs text-slate-300 flex items-center justify-between">
+                    <span>Verfasser: <strong class="text-brand-400">${escapeHtml(currentAdmin.username)} (${escapeHtml(currentAdmin.role)})</strong></span>
+                    <span class="text-slate-400">Datum & Uhrzeit automatisch</span>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Überschrift</label>
+                    <input type="text" id="edit-news-title" required value="${existing ? escapeAttr(existing.title) : ""}" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm outline-none focus:border-brand-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Text / Inhalt</label>
+                    <textarea id="edit-news-content" rows="5" required class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm outline-none focus:border-brand-500">${existing ? escapeHtml(existing.content) : ""}</textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Optionales Bild (Bild-URL)</label>
+                    <input type="text" id="edit-news-img" value="${existing && existing.imageUrl ? escapeAttr(existing.imageUrl) : ""}" placeholder="https://..." class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm outline-none focus:border-brand-500">
+                </div>
+            `;
+
+            openEditorModal(existing ? "Beitrag bearbeiten" : "Neue Neuigkeit posten", fields, async () => {
+                const title = document.getElementById("edit-news-title").value.trim();
+                const content = document.getElementById("edit-news-content").value.trim();
+                const imageUrl = document.getElementById("edit-news-img").value.trim();
+                const now = new Date();
+                const dateStr = now.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit", year: "numeric" });
+                const timeStr = `${now.toLocaleTimeString("de-DE", { hour: "2-digit", minute: "2-digit" })} Uhr`;
+
+                if (existing) {
+                    existing.title = title;
+                    existing.content = content;
+                    existing.imageUrl = imageUrl;
+                } else {
+                    siteData[listKey].unshift({
+                        id: "post_" + Date.now(),
+                        title,
+                        content,
+                        imageUrl,
+                        authorName: currentAdmin.username,
+                        authorRole: currentAdmin.role,
+                        dateStr,
+                        timeStr,
+                        timestamp: Date.now()
+                    });
+                }
+                await saveSiteData();
+                showToast("Beitrag veröffentlicht!", "success");
+            });
+        };
+
+        window.deleteNews = async function(category, id) {
+            if (!currentAdmin) return;
+            const listKey = category === "tram" ? "tramNews" : "studioNews";
+            siteData[listKey] = siteData[listKey].filter(n => n.id !== id);
+            await saveSiteData();
+            renderAll();
+            showToast("Beitrag gelöscht.", "info");
+        };
+
+        // Über uns bearbeiten
+        window.openEditAboutModal = function() {
+            const fields = `
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Über uns Text</label>
+                    <textarea id="edit-about-text" rows="6" required class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm outline-none focus:border-brand-500">${escapeHtml(siteData.aboutText || DEFAULT_DATA.aboutText)}</textarea>
+                </div>
+            `;
+            openEditorModal("Über uns bearbeiten", fields, async () => {
+                siteData.aboutText = document.getElementById("edit-about-text").value.trim();
+                if (siteData.customTexts) delete siteData.customTexts["about.mainText"];
+                await saveSiteData();
+                showToast("Über uns gespeichert.", "success");
+            });
+        };
+
+        // Tram Simulator Infos bearbeiten
+        window.openEditTramInfoModal = function() {
+            const fields = `
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Titel</label>
+                    <input type="text" id="edit-ti-title" required value="${escapeAttr(siteData.tramInfo.title)}" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Beschreibung</label>
+                    <textarea id="edit-ti-desc" rows="4" required class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">${escapeHtml(siteData.tramInfo.desc)}</textarea>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Roblox-Link</label>
+                    <input type="url" id="edit-ti-url" required value="${escapeAttr(siteData.tramInfo.robloxUrl)}" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Vorschaubild-URL</label>
+                    <input type="text" id="edit-ti-img" required value="${escapeAttr(siteData.tramInfo.previewImg)}" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">
+                </div>
+            `;
+            openEditorModal("Spiel-Infos bearbeiten", fields, async () => {
+                siteData.tramInfo.title = document.getElementById("edit-ti-title").value.trim();
+                siteData.tramInfo.desc = document.getElementById("edit-ti-desc").value.trim();
+                siteData.tramInfo.robloxUrl = document.getElementById("edit-ti-url").value.trim();
+                siteData.tramInfo.previewImg = document.getElementById("edit-ti-img").value.trim();
+                if (siteData.customTexts) {
+                    delete siteData.customTexts["tram.info.title"];
+                    delete siteData.customTexts["tram.info.desc"];
+                }
+                await saveSiteData();
+                showToast("Spiel-Infos gespeichert.", "success");
+            });
+        };
+
+        // Fahrzeuge hinzufügen / bearbeiten
+        window.openVehicleModal = function(existingId = null) {
+            const existing = existingId ? siteData.vehicles.find(v => v.id === existingId) : null;
+            const fields = `
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Fahrzeugname</label>
+                    <input type="text" id="edit-v-name" required value="${existing ? escapeAttr(existing.name) : ""}" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Kategorie / Typ</label>
+                        <input type="text" id="edit-v-type" required value="${existing ? escapeAttr(existing.type) : "Stadtbahn"}" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1">Status</label>
+                        <input type="text" id="edit-v-status" required value="${existing ? escapeAttr(existing.status) : "Verfügbar"}" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Bild-URL</label>
+                    <input type="text" id="edit-v-img" required value="${existing ? escapeAttr(existing.img) : "image_293b06.jpg"}" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Beschreibung</label>
+                    <textarea id="edit-v-desc" rows="3" required class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">${existing ? escapeHtml(existing.desc) : ""}</textarea>
+                </div>
+            `;
+            openEditorModal(existing ? "Fahrzeug bearbeiten" : "Fahrzeug hinzufügen", fields, async () => {
+                const payload = {
+                    id: existing ? existing.id : "v_" + Date.now(),
+                    name: document.getElementById("edit-v-name").value.trim(),
+                    type: document.getElementById("edit-v-type").value.trim(),
+                    status: document.getElementById("edit-v-status").value.trim(),
+                    img: document.getElementById("edit-v-img").value.trim(),
+                    desc: document.getElementById("edit-v-desc").value.trim()
+                };
+                if (existing) {
+                    Object.assign(existing, payload);
+                } else {
+                    siteData.vehicles.push(payload);
+                }
+                await saveSiteData();
+                showToast("Fahrzeug gespeichert.", "success");
+            });
+        };
+
+        // Linien hinzufügen / bearbeiten
+        window.openLineModal = function(existingId = null) {
+            const existing = existingId ? siteData.lines.find(l => l.id === existingId) : null;
+            const fields = `
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Liniennummer / Bezeichnung</label>
+                    <input type="text" id="edit-l-num" required value="${existing ? escapeAttr(existing.number) : ""}" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Streckenverlauf</label>
+                    <input type="text" id="edit-l-route" required value="${existing ? escapeAttr(existing.route) : ""}" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Haltestellen</label>
+                    <input type="text" id="edit-l-stops" required value="${existing ? escapeAttr(existing.stops) : ""}" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Beschreibung</label>
+                    <textarea id="edit-l-desc" rows="3" required class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">${existing ? escapeHtml(existing.desc) : ""}</textarea>
+                </div>
+            `;
+            openEditorModal(existing ? "Linie bearbeiten" : "Linie hinzufügen", fields, async () => {
+                const payload = {
+                    id: existing ? existing.id : "l_" + Date.now(),
+                    number: document.getElementById("edit-l-num").value.trim(),
+                    route: document.getElementById("edit-l-route").value.trim(),
+                    stops: document.getElementById("edit-l-stops").value.trim(),
+                    desc: document.getElementById("edit-l-desc").value.trim()
+                };
+                if (existing) {
+                    Object.assign(existing, payload);
+                } else {
+                    siteData.lines.push(payload);
+                }
+                await saveSiteData();
+                showToast("Linie gespeichert.", "success");
+            });
+        };
+
+        // Teammitglieder hinzufügen / bearbeiten
+        window.openTeamModal = function(existingId = null) {
+            const existing = existingId ? siteData.team.find(t => t.id === existingId) : null;
+            const fields = `
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Name</label>
+                    <input type="text" id="edit-t-name" required value="${existing ? escapeAttr(existing.name) : ""}" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Rolle / Rang</label>
+                    <input type="text" id="edit-t-role" required value="${existing ? escapeAttr(existing.role) : ""}" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Beschreibung</label>
+                    <textarea id="edit-t-bio" rows="3" required class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-sm">${existing ? escapeHtml(existing.bio) : ""}</textarea>
+                </div>
+            `;
+            openEditorModal(existing ? "Mitglied bearbeiten" : "Mitglied hinzufügen", fields, async () => {
+                const payload = {
+                    id: existing ? existing.id : "t_" + Date.now(),
+                    name: document.getElementById("edit-t-name").value.trim(),
+                    role: document.getElementById("edit-t-role").value.trim(),
+                    bio: document.getElementById("edit-t-bio").value.trim()
+                };
+                if (existing) {
+                    Object.assign(existing, payload);
+                } else {
+                    siteData.team.push(payload);
+                }
+                await saveSiteData();
+                showToast("Teammitglied gespeichert.", "success");
+            });
+        };
+
+        // Hintergrundbilder anpassen
+        window.openBgManagerModal = function() {
+            const rowsHtml = siteData.slides.map((s, idx) => `
+                <div class="space-y-1">
+                    <label class="block text-xs font-mono text-slate-400">Bild #${idx + 1} URL</label>
+                    <input type="text" data-slide-url="${idx}" value="${escapeAttr(s.url)}" class="w-full px-3 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-xs">
+                </div>
+            `).join("");
+
+            const fields = `
+                <p class="text-xs text-slate-400">Bild-URLs für den Hintergrund-Slider der Startseite:</p>
+                <div class="space-y-3 max-h-72 overflow-y-auto">${rowsHtml}</div>
+            `;
+
+            openEditorModal("Hintergrundbilder verwalten", fields, async () => {
+                const urlInputs = document.querySelectorAll("[data-slide-url]");
+                const updated = [];
+                urlInputs.forEach((inp) => {
+                    const u = inp.value.trim();
+                    if (u) updated.push({ url: u });
+                });
+                if (updated.length > 0) {
+                    siteData.slides = updated;
+                    await saveSiteData();
+                    showToast("Hintergrundbilder gespeichert.", "success");
+                }
+            });
+        };
+
+        // Discord-Webhook anpassen
+        window.openWebhookSettingsModal = function() {
+            const fields = `
+                <div>
+                    <label class="block text-xs font-medium text-slate-400 mb-1">Discord Webhook-URL für Spieler-Reports</label>
+                    <input type="url" id="edit-webhook-url" required value="${escapeAttr(siteData.webhookUrl)}" class="w-full px-3.5 py-2 rounded-lg bg-base-950 border border-base-700 text-white text-xs font-mono">
+                </div>
+            `;
+            openEditorModal("Webhook-Einstellungen", fields, async () => {
+                siteData.webhookUrl = document.getElementById("edit-webhook-url").value.trim();
+                await saveSiteData();
+                showToast("Webhook-URL gespeichert.", "success");
+            });
+        };
+
+        window.deleteItem = async function(collectionKey, id) {
+            if (!currentAdmin) return;
+            siteData[collectionKey] = siteData[collectionKey].filter(item => item.id !== id);
+            await saveSiteData();
+            renderAll();
+            showToast("Eintrag gelöscht.", "info");
+        };
+
+        // ==================== SPIELER-REPORTS (DISCORD WEBHOOK BIS 25 MB) ====================
+        const MAX_REPORT_BYTES = 25 * 1024 * 1024;
+
+        const dropzone = document.getElementById("report-dropzone");
+        dropzone.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            dropzone.classList.add("border-brand-500");
+        });
+        dropzone.addEventListener("dragleave", () => {
+            dropzone.classList.remove("border-brand-500");
+        });
+        dropzone.addEventListener("drop", (e) => {
+            e.preventDefault();
+            dropzone.classList.remove("border-brand-500");
+            if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+                processReportFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        window.handleReportFileSelect = function(e) {
+            if (e.target.files && e.target.files[0]) {
+                processReportFile(e.target.files[0]);
+            }
+        };
+
+        function processReportFile(file) {
+            const errorEl = document.getElementById("report-file-error");
+            errorEl.classList.add("hidden");
+
+            const allowedTypes = [
+                "image/png", "image/jpeg", "image/gif", "image/webp",
+                "video/mp4", "video/quicktime", "video/webm"
+            ];
+
+            if (!allowedTypes.includes(file.type)) {
+                errorEl.textContent = "Nicht unterstütztes Dateiformat. Erlaubt sind PNG, JPG, GIF, WEBP, MP4, MOV und WEBM.";
+                errorEl.classList.remove("hidden");
+                return;
+            }
+
+            if (file.size > MAX_REPORT_BYTES) {
+                errorEl.textContent = `Die Datei ist ${(file.size / (1024 * 1024)).toFixed(2)} MB groß. Maximal erlaubt sind 25 MB.`;
+                errorEl.classList.remove("hidden");
+                return;
+            }
+
+            selectedReportFile = file;
+            document.getElementById("report-upload-placeholder").classList.add("hidden");
+            document.getElementById("report-file-preview").classList.remove("hidden");
+            document.getElementById("report-file-name").textContent = file.name;
+            document.getElementById("report-file-size").textContent = `${(file.size / (1024 * 1024)).toFixed(2)} MB`;
+
+            const mediaContainer = document.getElementById("report-preview-media");
+            const objectUrl = URL.createObjectURL(file);
+            if (file.type.startsWith("video/")) {
+                mediaContainer.innerHTML = `<video src="${objectUrl}" controls class="max-h-52 rounded"></video>`;
+            } else {
+                mediaContainer.innerHTML = `<img src="${objectUrl}" alt="Vorschau" class="max-h-52 rounded object-contain">`;
+            }
+        }
+
+        window.clearReportFile = function(e) {
+            e.stopPropagation();
+            selectedReportFile = null;
+            document.getElementById("report-file-input").value = "";
+            document.getElementById("report-file-preview").classList.add("hidden");
+            document.getElementById("report-upload-placeholder").classList.remove("hidden");
+            document.getElementById("report-preview-media").innerHTML = "";
+        };
+
+        window.submitPlayerReport = async function(e) {
+            e.preventDefault();
+            const username = document.getElementById("report-username").value.trim();
+            const message = document.getElementById("report-message").value.trim();
+            const submitBtn = document.getElementById("report-submit-btn");
+            const statusBox = document.getElementById("report-status-box");
+
+            if (!username) return;
+
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i><span>Wird gesendet...</span>`;
+            lucide.createIcons();
+            statusBox.classList.add("hidden");
+
+            try {
+                const formData = new FormData();
+                const embed = {
+                    title: "Neuer Spieler-Report",
+                    color: 2450411,
+                    fields: [
+                        {
+                            name: "Melder (Roblox / Discord)",
+                            value: username,
+                            inline: true
+                        },
+                        {
+                            name: "Anhang",
+                            value: selectedReportFile ? `${selectedReportFile.name} (${(selectedReportFile.size / (1024 * 1024)).toFixed(2)} MB)` : "Kein Anhang",
+                            inline: true
+                        },
+                        {
+                            name: "Nachricht",
+                            value: message ? message : "Keine Nachricht angegeben."
+                        }
+                    ],
+                    footer: {
+                        text: "Max Development • Spieler-Reports"
+                    },
+                    timestamp: new Date().toISOString()
+                };
+
+                formData.append("payload_json", JSON.stringify({
+                    username: "Max Development Reports",
+                    embeds: [embed]
+                }));
+
+                if (selectedReportFile) {
+                    formData.append("files[0]", selectedReportFile, selectedReportFile.name);
+                }
+
+                const response = await fetch(siteData.webhookUrl, {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (response.ok || response.status === 204) {
+                    statusBox.className = "rounded-lg p-3.5 text-sm bg-emerald-950/50 border border-emerald-500/40 text-emerald-300";
+                    statusBox.textContent = "Dein Report wurde erfolgreich an unser Team auf Discord gesendet.";
+                    statusBox.classList.remove("hidden");
+
+                    document.getElementById("report-form").reset();
+                    if (selectedReportFile) {
+                        selectedReportFile = null;
+                        document.getElementById("report-file-preview").classList.add("hidden");
+                        document.getElementById("report-upload-placeholder").classList.remove("hidden");
+                        document.getElementById("report-preview-media").innerHTML = "";
+                    }
+                    showToast("Report erfolgreich gesendet.", "success");
+                } else {
+                    throw new Error(`Status ${response.status}`);
+                }
+            } catch (err) {
+                console.error("Webhook Fehler:", err);
+                statusBox.className = "rounded-lg p-3.5 text-sm bg-rose-950/50 border border-rose-500/40 text-rose-300";
+                statusBox.textContent = "Fehler beim Senden des Reports. Bitte versuche es später erneut oder melde dich auf unserem Discord.";
+                statusBox.classList.remove("hidden");
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<i data-lucide="send" class="w-4 h-4"></i><span>Report absenden</span>`;
+                lucide.createIcons();
+            }
+        };
+
+        // ==================== HILFSFUNKTIONEN ====================
+        window.toggleMobileMenu = function() {
+            document.getElementById("mobile-menu").classList.toggle("hidden");
+        };
+
+        function showToast(msg, type = "info") {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            const colors = {
+                success: "bg-base-900 border-emerald-500/50 text-emerald-300",
+                info: "bg-base-900 border-brand-500/50 text-slate-200",
+                error: "bg-base-900 border-rose-500/50 text-rose-300"
+            };
+            toast.className = `pointer-events-auto px-4 py-2.5 rounded-lg border shadow-xl text-xs sm:text-sm font-medium transition-opacity ${colors[type] || colors.info}`;
+            toast.textContent = msg;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = "0";
+                setTimeout(() => toast.remove(), 250);
+            }, 3000);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return "";
+            return String(str)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function escapeAttr(str) {
+            return escapeHtml(str);
+        }
+
+        // ==================== START ====================
+        window.addEventListener("DOMContentLoaded", () => {
+            lucide.createIcons();
+            captureDefaultEditableTexts();
+            checkLegalConsent();
+            restoreAdminSession();
+            initDatabase();
+        });
+    </script>
+</body>
+</html>
